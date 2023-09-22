@@ -12,7 +12,7 @@ const Admin = () => {
         return response.data;
       })
       .then((data) => setinput(data));
-      console.log(input)
+    console.log(input)
   }, []);
   const Formik = useFormik({
     initialValues: {
@@ -20,52 +20,78 @@ const Admin = () => {
       Email: "",
     },
     onSubmit: async (values) => {
-        if (values.Email === "") {
-            return toast.warning("Select the Email", {
-              position: "bottom-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
-          }
-          const filtered = await input.filter(
-            (fil) => fil.Email === values.Email
-          );
-          console.log(filtered);
-          filtered[0]?.id 
-            ? axios.put(`http://localhost:8000/staff/${filtered[0].id}`, {...filtered[0], admin : true})
-            : toast.error("Email is Wrong", {
-                position: "bottom-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-              });
-          filtered[0]?.Email &&
-            toast.success("Succesfully Updated", {
-              position: "bottom-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-            });
-           Formik.values.Email = ""
+      if (values.Email === "") {
+        return toast.warning("Select the Email", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+      const filtered = await input.filter(
+        (fil) => fil.Email === values.Email
+      );
+      console.log(filtered);
+      if (filtered[0].admin === false) {
+         filtered[0]?.id
+          ? axios.put(`http://localhost:8000/staff/${filtered[0].id}`, { ...filtered[0], admin: true })
+          : toast.error("Email is Wrong", {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        filtered[0]?.Email &&
+          toast.success("Succesfully updated to Admin", {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          return Formik.values.Email = ""
+      }
+      filtered[0]?.id
+        ? axios.put(`http://localhost:8000/staff/${filtered[0].id}`, { ...filtered[0], admin: false })
+        : toast.error("Email is Wrong", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      filtered[0]?.Email &&
+        toast.success("Succesfully removed from admin", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+       Formik.values.Email = ""
     },
   });
   return (
     <div className=" bg-white p-10 flex flex-col gap-8 mt-20 h-[70vh] rounded-md  items-center justify-center">
       <div className=" w-4/5 border-b-2 border-slate-300 my-5 flex flex-col items-center justify-center">
-      <svg
+        <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="currentColor"
