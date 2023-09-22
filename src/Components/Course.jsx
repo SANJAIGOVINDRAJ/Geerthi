@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const Course = () => {
   const [input, setinput] = useState("");
@@ -18,10 +19,36 @@ const Course = () => {
       staff: "",
     },
     onSubmit: async (values) => {
-      const result = await axios.post("http://localhost:8000/course", values, {
-        headers: { "Content-Type": "application/json" },
-      });
-      console.log(result.data);
+      if (values.course === "" || values.course === "") {
+        return toast.warning("Fill the Course Details", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+      const result = await axios
+        .post("http://localhost:8000/course", values, {
+          headers: { "Content-Type": "application/json" },
+        })
+        .then(() => {
+          toast.success("Successfully  Registered", {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          Formik.values.course = "";
+          Formik.values.staff = "";
+        });
     },
   });
   return (
@@ -47,7 +74,8 @@ const Course = () => {
           id="course"
           value={Formik.values.course}
           onChange={Formik.handleChange}
-          className="p-2 px-2  border-2 w-60 text-slate-400 font-medium border-slate-300 outline-none rounded-lg focus:border-4 focus:border-slate-400 focus:ring-4 focus:ring-slate-300"
+          placeholder="Course Name "
+          className="p-2 px-2  border-2 w-60 placeholder:text-slate-400 text-slate-400 font-medium border-slate-300 outline-none rounded-lg focus:border-4 focus:border-slate-400 focus:ring-4 focus:ring-slate-300"
         />
       </div>
       <div className=" flex justify-between items-center ml-14 ">
