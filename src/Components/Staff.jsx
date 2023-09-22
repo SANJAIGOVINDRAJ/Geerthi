@@ -65,7 +65,7 @@ const Staff = () => {
         filtered[0]?.Password &&
         navigate("/home", {
           state: {
-            role: "student",
+            admin: filtered[0].admin,
           },
         });
     },
