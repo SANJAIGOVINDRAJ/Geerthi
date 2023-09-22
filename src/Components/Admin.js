@@ -49,7 +49,7 @@ const Admin = () => {
                 theme: "light",
               });
           filtered[0]?.Email &&
-            toast.success("Succesfully Logged In", {
+            toast.success("Succesfully Updated", {
               position: "bottom-center",
               autoClose: 5000,
               hideProgressBar: false,
@@ -59,6 +59,7 @@ const Admin = () => {
               progress: undefined,
               theme: "light",
             });
+           Formik.values.Email = ""
     },
   });
   return (
