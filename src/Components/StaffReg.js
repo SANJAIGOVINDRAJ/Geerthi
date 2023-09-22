@@ -12,6 +12,7 @@ const StaffReg = () => {
       Password: "",
       Email: "",
       admin: false,
+      role : "staff"
     },
     onSubmit: async (values) => {
       if (values.Email === "" || values.Password === "" || values.Name ==="") {
