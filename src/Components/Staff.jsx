@@ -61,7 +61,13 @@ const Staff = () => {
           progress: undefined,
           theme: "light",
         });
-      filtered[0]?.Email && filtered[0]?.Password && navigate("/home");
+      filtered[0]?.Email &&
+        filtered[0]?.Password &&
+        navigate("/home", {
+          state: {
+            role: "student",
+          },
+        });
     },
   });
   return (
