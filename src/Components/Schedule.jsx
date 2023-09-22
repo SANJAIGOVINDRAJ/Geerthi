@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Schedule = (data) => {
-  const days = ["I", "II", "III", "IV", "V" , "VI"];
+  const days = ["I", "II", "III", "IV", "V", "VI"];
   const timeslots = ["I", "II", "III", "IV", "V"];
 
   const [input, setinput] = useState("");
@@ -22,18 +23,41 @@ const Schedule = (data) => {
       Time: "",
     },
     onSubmit: async (values) => {
-      const result = await axios.post(
-        "http://localhost:8000/timetableData",
-        values,
-        { headers: { "Content-Type": "application/json" } }
-      );
+      if (values.Day === "" || values.Subject === "" || values.Time ==="") {
+        return toast.warning("Fill the Contents", {
+          position: "bottom-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+      const result = await axios
+        .post("http://localhost:8000/timetableData", values, {
+          headers: { "Content-Type": "application/json" },
+        })
+        .then(() =>
+          toast.success("Succesfully Updated", {
+            position: "bottom-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          })
+        );
       console.log(result.data);
-      Formik.values.Day = ""
-      Formik.values.Subject = ""
-      Formik.values.Time = ""
+      Formik.values.Day = "";
+      Formik.values.Subject = "";
+      Formik.values.Time = "";
     },
   });
-  console.log(data)
+  console.log(data);
   return (
     <div>
       <div className=" flex  flex-col gap-10 items-center justify-center w-[70vw]  shadow-md bg-white mt-20 p-10 rounded-lg">
@@ -61,7 +85,9 @@ const Schedule = (data) => {
           {" "}
           <div className=" flex flex-col gap-10 items-center justify-center">
             <div className=" flex gap-2 flex-col items-center justify-center w-full">
-              <label className="  text-slate-600 font-semibold uppercase tracking-wider">Course</label>
+              <label className="  text-slate-600 font-semibold uppercase tracking-wider">
+                Course
+              </label>
               <select
                 className="p-2 px-2  border-2 w-96 text-slate-400 font-medium border-slate-300 outline-none rounded-lg focus:border-4 focus:border-slate-400 focus:ring-4 focus:ring-slate-300"
                 id="Subject"
@@ -85,7 +111,9 @@ const Schedule = (data) => {
 
             <div className=" flex gap-14 ">
               <div className=" flex gap-2 flex-col items-center justify-end">
-                <label className="text-slate-600 font-semibold uppercase tracking-wider">Day</label>
+                <label className="text-slate-600 font-semibold uppercase tracking-wider">
+                  Day
+                </label>
                 <select
                   className="p-2 px-2  border-2 w-32 text-slate-400 font-medium border-slate-300 outline-none rounded-lg focus:border-4 focus:border-slate-400 focus:ring-4 focus:ring-slate-300"
                   id="Day"
@@ -104,7 +132,9 @@ const Schedule = (data) => {
                 </select>
               </div>
               <div className=" flex gap-2 flex-col items-center">
-                <label className="text-slate-600 font-semibold uppercase tracking-wider">Period</label>
+                <label className="text-slate-600 font-semibold uppercase tracking-wider">
+                  Period
+                </label>
                 <select
                   className="p-2 px-2  border-2 w-32 text-slate-400 font-medium border-slate-300 outline-none rounded-lg focus:border-4 focus:border-slate-400 focus:ring-4 focus:ring-slate-300"
                   id="Time"
@@ -113,9 +143,7 @@ const Schedule = (data) => {
                   onChange={Formik.handleChange}
                 >
                   <option className=" p-5">
-                    {Formik.values.Time
-                      ? Formik.values.Time
-                      : "Select"}
+                    {Formik.values.Time ? Formik.values.Time : "Select"}
                   </option>
                   {timeslots.map((sub) => (
                     <option key={sub} className=" p-5">
