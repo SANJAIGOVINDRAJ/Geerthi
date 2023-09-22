@@ -7,7 +7,10 @@ const Timetable = () => {
   const time = ["I", "II", "III", "IV", "V"];
   const [show, setshow] = useState(false);
   const [timetableData, settimetableData] = useState(null);
-  const location = useLocation()
+  const location = useLocation();
+  if (location?.state?.admin) {
+    localStorage.setItem("admin", location?.state?.admin);
+  }
   useEffect(() => {
     axios
       .get("http://localhost:8000/timetableData")
@@ -15,9 +18,8 @@ const Timetable = () => {
         return response.data;
       })
       .then((data) => settimetableData(data));
-
   }, []);
-  
+
   const removeUser = async (id) => {
     const res = await axios
       .delete(`http://localhost:8000/timetableData/${id}`)
@@ -75,7 +77,7 @@ const Timetable = () => {
                           <div className=" text-slate-500 text-xs">
                             {data.Subject.split("-")[1]}
                           </div>
-                          { !location?.state.role == "student" && (show && (
+                          {localStorage.getItem("admin") && show && (
                             <div className=" absolute bg-white w-20 h-10 flex gap-5 items-center justify-center z-50 shadow-2xl shadow-slate-600 rounded-lg  right-0">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +93,7 @@ const Timetable = () => {
                                 />
                               </svg>
                             </div>
-                          ))}
+                          )}
                         </div>
                       );
                     }
